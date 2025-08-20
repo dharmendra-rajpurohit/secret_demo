@@ -1,0 +1,35 @@
+name : Matrix Worflow Example
+
+on : 
+
+  push : 
+    branches : ["main"]
+  pull_request :
+    branches : ["main"]
+
+jobs :
+  build_and_test_matrix :
+    strategy :
+      matrix :
+        os : [ubuntu-latest, windows-latest, macos-latest]
+        node-version : [14, 16, 18]
+      
+    runs-on : ${{ matrix.os }}
+
+    steps : 
+      - name : Checkout code
+        uses : actions/checkout@v4
+
+      - name : Set up Node.js ${{ matrix.node-version }}
+        uses : actions/setup-node@v3
+        with :
+          node-version : ${{ matrix.node-version }}
+          cache : 'npm'
+
+      - name : Install dependencies
+        run : | 
+          node -v
+          npm install
+
+      # - name : Run tests
+      #   run : npm test
